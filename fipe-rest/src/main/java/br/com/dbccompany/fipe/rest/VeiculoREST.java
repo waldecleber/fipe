@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response.Status;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.dbccompany.fipe.domain.Fipe;
 import br.com.dbccompany.fipe.domain.Marca;
 import br.com.dbccompany.fipe.domain.Preco;
 import br.com.dbccompany.fipe.domain.Veiculo;
@@ -35,6 +36,8 @@ public class VeiculoREST {
 	private List<Marca> marcas = new ArrayList<Marca>();
 
 	private List<Veiculo> veiculos = new ArrayList<Veiculo>();
+	
+	private List<Fipe> fipeList = new ArrayList<Fipe>();
 
 
 	/**
@@ -104,20 +107,20 @@ public class VeiculoREST {
 	@GET
 	@Path("/{id}/{marca}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Veiculo> listarVeiculoComPreco(@PathParam("id") String id, @PathParam("marca") String marca) {
+	public List<Fipe> listarVeiculoComPreco(@PathParam("id") String id, @PathParam("marca") String marca) {
 
 		try {
 
 			ObjectMapper mapper = new ObjectMapper();
 
-			veiculos = mapper.readValue(new URL(URL_FIPE + "veiculo/" + id + "/" + marca + ".json"),
-					new TypeReference<List<Veiculo>>() {
+			fipeList = mapper.readValue(new URL(URL_FIPE + "veiculo/" + id + "/" + marca + ".json"),
+					new TypeReference<List<Fipe>>() {
 					});
 
 			/*
 			 * Faz o mapeamento dos precos para o respectivo veiculo.
 			 */
-			for (Veiculo veiculo : veiculos) {
+			for (Fipe veiculo : fipeList) {
 				Preco preco = mapper.readValue(
 						new URL(URL_FIPE + "veiculo/" + id + "/" + marca + "/" + veiculo.getId() + ".json"),
 						Preco.class);
@@ -128,9 +131,9 @@ public class VeiculoREST {
 			/*
 			 * Percorre a lista de veiculos para calcular a diferenca entre os precos.
 			 */
-			for (int i = 1; i < veiculos.size(); i++) {
-				Veiculo atual = veiculos.get(i - 1);
-				Veiculo prox = veiculos.get(i);
+			for (int i = 1; i < fipeList.size(); i++) {
+				Fipe atual = fipeList.get(i - 1);
+				Fipe prox = fipeList.get(i);
 
 				double diferenca = atual.getPreco().getPrecoFormatado() - prox.getPreco().getPrecoFormatado();
 
@@ -142,6 +145,7 @@ public class VeiculoREST {
 				df2.setMultiplier(1);
 
 				prox.getPreco().setPercentual((Double) df2.parse(df2.format(percentual)));
+				prox.getPreco().setAnoAnterior(atual.getPreco().getAno_modelo());
 			}
 
 		} catch (Exception e) {
@@ -149,7 +153,7 @@ public class VeiculoREST {
 			e.printStackTrace();
 
 		}
-		return veiculos;
+		return fipeList;
 
 	}
 

@@ -33,6 +33,13 @@ export class VeiculoService {
     );
   }
 
+  public pesquisarFipe(id, marca): Observable<any>{
+    return this.http.get(`${this.URL}/${id}/${marca}`).pipe(
+      map(response => response),
+      catchError(this.handleError)
+    );
+  }
+
   // Error handling 
   handleError(error) {
     let errorMessage = '';

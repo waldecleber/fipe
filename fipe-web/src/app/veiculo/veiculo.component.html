@@ -2,23 +2,23 @@
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="marca">Marca </label>
-            <select id="marca" class="form-control">
+            <select [(ngModel)]="marcaSelecionada" id="marca" name="marca" class="form-control" (change)="carregarVeiculos(marcaSelecionada.id)">
                 <option selected>Selecione...</option>
                 <option *ngFor="let item of marcas" [ngValue]="item">{{item.name}}</option>
             </select>
         </div>
         <div class="form-group col-md-6">
             <label for="veiculo">Veiculo</label>
-            <select id="veiculo" class="form-control">
+            <select [(ngModel)]="veiculoSelecionado" id="veiculo" name="veiculo" class="form-control">
                 <option selected>Selecione...</option>
-                <option>...</option>
+                <option *ngFor="let item of veiculos" [ngValue]="item">{{item.name}}</option> 
             </select>
         </div>
     </div>
 
     <div class="form-group">
 
-        <button type="submit" class="btn btn-primary">Pesquisar</button>
+        <button type="submit" class="btn btn-primary" (click)="pesquisarFipe()">Pesquisar</button>
     </div>
 
 
@@ -26,45 +26,33 @@
 
 <div class="row"></div>
 
-<div class="form-row">
+<div class="form-row"  >
     <div class="form-group col-md-12">
 
-        <li *ngFor="let item of veiculos">
-            {{item | json}}
-        </li>
+            <div class="spinner-border" role="status" *ngIf="spinner" >
+                    <span class="sr-only">Loading...</span>
+                  </div>
+
 
         <table class="table">
-            <thead class="thead-dark">
+            <thead class="thead-dark" *ngIf="fipeList.length >= 1">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Ano</th>
                     <th scope="col">Preço</th>
-                    <th scope="col">Diferença (R$)</th>
+                    <th scope="col">Alteração (R$)</th>
                     <th scope="col">Diferença (%)</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
+                <tr *ngFor="let item of fipeList ; let i = index" >
+                    <th scope="row">{{item.id}}</th>
+                    <td>{{item.preco.ano_modelo}}</td>
+                    <td>{{item.preco.preco == 0 ? '-': item.preco.preco}}</td>
+                    <td>{{item.preco.diferenca == 0 ? '-' : item.preco.diferenca | currency:'BRL'}}</td>
+                    <td>{{item.preco.percentual == 0 ? '-' : item.preco.percentual + ' % em relação a ' + item.preco.anoAnterior}}</td>
                 </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                    <td>@mdo</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
-                    <td>@mdo</td>
-                </tr>
+               
             </tbody>
         </table>
 

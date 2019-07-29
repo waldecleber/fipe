@@ -1,3 +1,4 @@
+import { LoaderService } from './loader.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
@@ -24,7 +25,8 @@ import { MarcaService } from './marca/marca.service';
   ],
   providers: [
     VeiculoService,
-    MarcaService
+    MarcaService,
+    LoaderService
   ],
   bootstrap: [AppComponent]
 })

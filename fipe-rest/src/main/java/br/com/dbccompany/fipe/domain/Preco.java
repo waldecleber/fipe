@@ -52,6 +52,8 @@ public class Preco implements Serializable {
 	private double diferenca;
 	
 	private double percentual;
+	
+	private String anoAnterior;
 
 	public double getPercentual() {
 		return percentual;
@@ -194,6 +196,14 @@ public class Preco implements Serializable {
 
 	public void setPrecoFormatado(double precoFormatado) {
 		this.precoFormatado = precoFormatado;
+	}
+
+	public String getAnoAnterior() {
+		return anoAnterior;
+	}
+
+	public void setAnoAnterior(String anoAnterior) {
+		this.anoAnterior = anoAnterior;
 	}
 	
 	

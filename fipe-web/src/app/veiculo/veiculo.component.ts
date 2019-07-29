@@ -1,3 +1,5 @@
+import { LoaderService } from './../loader.service';
+import { Fipe } from './fipe';
 import { Component, OnInit } from '@angular/core';
 import { VeiculoService } from './veiculo.service';
 import { Veiculo } from './veiculo';
@@ -13,17 +15,19 @@ export class VeiculoComponent implements OnInit {
 
   veiculos: Array<Veiculo> = new Array<Veiculo>();
   marcas: Array<Marca> = new Array<Marca>();
+  fipeList: Array<Fipe> = new Array<Fipe>();
+
+  marcaSelecionada: Marca;
+  veiculoSelecionado: Veiculo;
+  spinner: boolean;
   
   constructor(
     private veiculoService: VeiculoService,
-    private marcaService: MarcaService
+    private marcaService: MarcaService,
+    private loader: LoaderService
   ) { }
 
   ngOnInit() {
-    this.veiculoService.listarVeiculos('21').subscribe( res => {
-      this.veiculos = res
-    });
-
     this.carregarMarcas();
   }
 
@@ -32,6 +36,22 @@ export class VeiculoComponent implements OnInit {
       this.marcas = res
     })
 
+  }
+
+  carregarVeiculos(id) {    
+    this.veiculoService.listarVeiculos(id).subscribe( res => {
+      this.veiculos = res
+    });
+  }
+
+  pesquisarFipe() {
+    this.spinner = true;
+    this.loader.display(true);
+    this.veiculoService.pesquisarFipe(this.marcaSelecionada.id, this.veiculoSelecionado.id).subscribe( res => {
+      this.fipeList = res;
+      this.loader.display(false);
+      this.spinner = false;
+    });
   }
 
 }
