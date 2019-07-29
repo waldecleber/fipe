@@ -136,14 +136,12 @@ public class VeiculoREST {
 				Fipe prox = fipeList.get(i);
 
 				double diferenca = atual.getPreco().getPrecoFormatado() - prox.getPreco().getPrecoFormatado();
-
-				prox.getPreco().setDiferenca(diferenca);
-
 				double percentual = ((diferenca * 100) / atual.getPreco().getPrecoFormatado());
 
 				DecimalFormat df2 = new DecimalFormat(" #,##0.00 %");
 				df2.setMultiplier(1);
 
+				prox.getPreco().setDiferenca(diferenca);
 				prox.getPreco().setPercentual((Double) df2.parse(df2.format(percentual)));
 				prox.getPreco().setAnoAnterior(atual.getPreco().getAno_modelo());
 			}
